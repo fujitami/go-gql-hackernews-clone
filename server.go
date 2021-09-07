@@ -4,6 +4,8 @@ import (
 	"go-gql-hackernews-clone/graph"
 	"go-gql-hackernews-clone/graph/generated"
 	database "go-gql-hackernews-clone/internal/pkg/db/mysql"
+	"go-gql-hackernews-clone/internal/auth"
+
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +24,8 @@ func main() {
 	}
 
 	router := chi.NewRouter()
+
+	router.Use(auth.Middleware())
 
 	database.InitDB()
 	database.Migrate()
