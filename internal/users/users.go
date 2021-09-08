@@ -34,11 +34,6 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
-
 func GetUserIdByUsername(username string) (int, error) {
 	statement, err := database.Db.Prepare("select ID from Users WHERE Username = ?")
 	if err != nil {
@@ -54,5 +49,30 @@ func GetUserIdByUsername(username string) (int, error) {
 		}
 		return 0, err
 	}
-	return 0, nil
+	return Id, nil
+}
+
+func (user *User) Authenticate() bool {
+	statement, err := database.Db.Prepare("select Password from Users WHERE Username = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	row := statement.QueryRow(user.Username)
+
+	var hashedPassword string
+	err = row.Scan(&hashedPassword)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		} else {
+			log.Fatal(err)
+		}
+	}
+	return CheckPasswordHash(user.Password, hashedPassword)
+}
+
+// 保存されたパスワードと入力されたパスワードが合っているか比較
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
