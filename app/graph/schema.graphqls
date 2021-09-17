@@ -23,7 +23,7 @@ input NewLink {
   address: String!
 }
 
-input RefreshTokenInput {
+input RefreshTokenInput{
   token: String!
 }
 

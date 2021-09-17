@@ -30,9 +30,6 @@ func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) 
 		Name: user.Username,
 	}
 	return &model.Link{ID: strconv.FormatInt(linkID, 10), Title:link.Title, Address:link.Address, User: graphqlUser}, nil
-
-	// linkID := link.Save()
-	// return &model.Link{ID: strconv.FormatInt(linkID, 10), Title:link.Title, Address:link.Address}, nil
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (string, error) {

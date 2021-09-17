@@ -19,6 +19,7 @@ type User struct {
 func (user *User) Create() {
 	statement, err := database.Db.Prepare("INSERT INTO Users(Username,Password) VALUES(?,?)")
 	print(statement)
+	log.Printf("%v\n", user)
 	if err != nil {
 		log.Fatal(err)
 	}
